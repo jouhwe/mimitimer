@@ -4,9 +4,9 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-red-200 to-orange-200 flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute inset-0 opacity-30 pointer-events-none">
-        {Array.from({ length: 12 }).map((_, row) => (
+        {Array.from({ length: 16 }).map((_, row) => (
           <div key={row}>
-            {Array.from({ length: 30 }).map((_, col) => {
+            {Array.from({ length: 32 }).map((_, col) => {
               const paw = row % 2 === 0 ? (col + 1) % 2 === 1 : (col + 1) % 2 === 0
 
               if (!paw) return null
