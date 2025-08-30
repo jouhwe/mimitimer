@@ -90,20 +90,34 @@ export function useTimer() {
   const playNotificationSound = () => {
     // Create a simple beep sound
     const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+    const createBirdChirp = (startTime: number, frequency: number, duration: number) => {
     const oscillator = audioContext.createOscillator()
     const gainNode = audioContext.createGain()
-
+    
     oscillator.connect(gainNode)
     gainNode.connect(audioContext.destination)
 
-    oscillator.frequency.value = 800
+    oscillator.frequency.setValueAtTime(frequency, startTime)
+    oscillator.frequency.exponentialRampToValueAtTime(frequency * 1.5, startTime + duration * 0.3)
+    oscillator.frequency.exponentialRampToValueAtTime(frequency * 0.8, startTime + duration * 0.7)
+    oscillator.frequency.exponentialRampToValueAtTime(frequency, startTime + duration)
     oscillator.type = "sine"
 
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5)
+    gainNode.gain.setValueAtTime(0, startTime)
+    gainNode.gain.exponentialRampToValueAtTime(0.3, startTime + 0.01)
+    gainNode.gain.exponentialRampToValueAtTime(0.1, startTime + duration * 0.5)
+    gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration)
 
-    oscillator.start(audioContext.currentTime)
-    oscillator.stop(audioContext.currentTime + 0.5)
+    oscillator.start(startTime)
+    oscillator.stop(startTime + duration)
+    }
+
+    const currentTime = audioContext.currentTime
+    createBirdChirp(currentTime, 800, 0.15)
+    createBirdChirp(currentTime + 0.2, 1000, 0.12)
+    createBirdChirp(currentTime + 0.4, 900, 0.18)
+    createBirdChirp(currentTime + 0.7, 1100, 0.1)
+    
   }
 
   const startTimer = useCallback(() => {
